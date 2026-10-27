@@ -162,53 +162,141 @@ A concentração de responsabilidades no TransferenciaService exige separar gera
 
 ---
 
+## 🔎 O caminho do MEU grupo
 
-## 🔎 O caminho do MEU grupo (preencher na 3ª aula, quando o mapa for revelado)
-
-Uma linha por decisão registrada acima (usem os títulos ditados em aula):
-
-| # | Decisão | Nossa letra | Consequência que ELA teria tido |
+| # | Decisão | Nossa letra | Consequência que ELA teve |
 |---|---|---|---|
-| | | | |
-| | | | |
-| | | | |
+| 1 | R1 · O saldo que virou negativo | C | Levamos 40 min a mais, com 8 clientes afetados no total, mas incluímos o assertThrows que protege a invariante: reputação +1, prejuízo +R$ 35 mil, dívida -1; 🔥 8 · 💰 R$ 35 mil · 🧹 1. |
+| 2 | R2 · A injeção que derreteu o banco | D | Usamos a query pronta do repository, com cerca de 50 min de trabalho, mais que o PreparedStatement: reputação +0, prejuízo +R$ 0 mil, dívida -1; 🔥 8 · 💰 R$ 35 mil · 🧹 0. |
+| 3 | R3 · A noite das contas gêmeas | D | Assumimos cerca de 1h de migração para o banco garantir a unicidade e gerar a numeração: reputação +0, prejuízo +R$ 10 mil, dívida +0; 🔥 8 · 💰 R$ 45 mil · 🧹 0. |
+| 4 | R4 · O comprovante que aponta pra pessoa errada | B | Corrigimos a gravação e reprocessamos o histórico em cerca de 2h, deixando os comprovantes já emitidos certos: reputação +1, prejuízo +R$ 25 mil, dívida -1; 🔥 9 · 💰 R$ 70 mil · 🧹 -1. |
+| 5 | R5 · A fábrica que devolve null | A | A Factory passou a rejeitar na origem com "Tipo de conta inválido: UNIVERSITARIA", em cerca de 30 min: reputação -1, prejuízo +R$ 0 mil, dívida +0; 🔥 8 · 💰 R$ 70 mil · 🧹 -1. |
+| 6 | ⚡C · O cadastro com metade dos campos | B | O Builder deu valores padrão só a campos opcionais sem efeito de negócio, como saldo inicial zero; tipo de conta e CPF obrigatórios, com exceção clara no build() quando faltam, coerente com o fail-fast da R5. A landing precisa enviar o tipo e exigir o CPF, que nunca vai para a resposta da API, conforme o dossiê. A landing perde conversão ao exigir esses dados, em troca de não criar contas incompletas nem espalhar null: reputação +0, prejuízo +R$ 0 mil, dívida +0; 🔥 8 · 💰 R$ 70 mil · 🧹 -1. |
+| 7 | R6 · O teste vermelho às 03h45 | B | Perdemos a janela e as correções só entraram depois da abertura, mas a investigação confirmou o erro no código e a taxa contratual de R$ 5: reputação -1, prejuízo +R$ 30 mil, dívida -1; 🔥 7 · 💰 R$ 100 mil · 🧹 -2. |
+| 8 | R7 · Go/No-Go da Black Friday | B | A suíte saudável sustentou a subida às 10h, com perda do início do pico: reputação +1, prejuízo +R$ 100 mil, dívida -1; 🔥 8 · 💰 R$ 200 mil · 🧹 -3. |
 
-*(adicionem linhas conforme as decisões da madrugada)*
+**Perfil final da noite (congelado):** A Noite dos Heróis · 🔥 8 · 💰 R$ 200 mil · 🧹 -3
+
+Para o banco, esse perfil significa que abriu com a confiança dos clientes preservada e o time pôde dormir quase em paz, apesar do prejuízo e do atraso.
 
 ---
 
-# 📋 PÓS-MORTEM · relatório de incidente (montar em sala na 3ª aula)
+# 📋 PÓS-MORTEM · relatório de incidente
 
-> Rascunho em aula e commit final `pos-mortem:` até 23h59 do dia da 3ª aula.
+Grupo VegTrack: Rogério Deligi Ferreira Filho, RM561942, e Maria Fernanda Garavelli Dantas, RM562686. Turma 2CCPW, Programação Orientada a Objetos em Java, FIAP. CP6: War Room FiapBank.
 
 ## 1. Linha do tempo da madrugada
 
-_______________________________________________________________________________________
+Partimos de 🔥 7 · 💰 0 · 🧹 2. O caminho vivido foi C, D, D, B, A, B, B, B, com o relâmpago ⚡C entre R5 e R6.
 
-_______________________________________________________________________________________
+| Relógio | Incidente | O que o grupo decidiu | Efeito |
+|---|---|---|---|
+| 19h12 | R1 · O saldo que virou negativo | C: retirar o catch que engolia SaldoInsuficienteException e testar a recusa antes do débito, preservando os saldos. | Mais 40 min, 8 clientes afetados no total e um assertThrows honesto; reputação +1, prejuízo +R$ 35 mil, dívida -1; 🔥 8 · 💰 R$ 35 mil · 🧹 1. |
+| 20h10 | ⚡A · Comparação de Strings com ==, Aula 2 | Não vivido: exigia rollback na R1; escolhemos C. | A escolha anterior evitou esse ramo, que confrontaria a comparação por referência com a derived query pronta da Aula 13; nenhum efeito adicional no placar. |
+| 21h02 | R2 · A injeção que derreteu o banco | D: substituir SQL concatenado por findByTitular do repository Spring Data JPA, com parâmetros vinculados, Aulas 12 e 13. | Cerca de 50 min, mais que o PreparedStatement; reputação +0, prejuízo +R$ 0 mil, dívida -1; 🔥 8 · 💰 R$ 35 mil · 🧹 0. |
+| 22h40 | ⚡B · Conexão sem close(), Aula 12 | Não vivido: exigia PreparedStatement na R2; escolhemos D, com recursos sob gestão do JPA. | A escolha anterior evitou esse ramo de conexão JDBC manual, cuja correção envolveria try-with-resources; nenhum efeito adicional no placar. |
+| 22h50 | R3 · A noite das contas gêmeas | D: usar sequence Oracle e unicidade no banco, auditando duplicatas e iniciando a sequence acima do maior número existente, Aula 14. | Cerca de 1h de migração; reputação +0, prejuízo +R$ 10 mil, dívida +0; 🔥 8 · 💰 R$ 45 mil · 🧹 0. |
+| 00h47 | R4 · O comprovante que aponta pra pessoa errada | B: corrigir origem e destino na entidade gravada e reprocessar o histórico, Aula 13, com evidência confiável, idempotência e sem refazer débitos. | Cerca de 2h, gravação corrigida e comprovantes antigos certos; reputação +1, prejuízo +R$ 25 mil, dívida -1; 🔥 9 · 💰 R$ 70 mil · 🧹 -1. |
+| 01h30 | R5 · A fábrica que devolve null | A: lançar exceção clara para tipo não suportado, em vez de deixar null chegar ao save, Aulas 8, 11 e 14. | Cerca de 30 min; erro "Tipo de conta inválido: UNIVERSITARIA" na origem, sem implementar o produto anunciado; reputação -1, prejuízo +R$ 0 mil, dívida +0; 🔥 8 · 💰 R$ 70 mil · 🧹 -1. |
+| 02h20 | ⚡C · O cadastro com metade dos campos | B: Builder com valores padrão só para campos opcionais sem efeito de negócio, como saldo inicial zero, Aula 14; tipo de conta e CPF obrigatórios, com exceção clara no build() quando faltam, coerente com o fail-fast da R5. A landing precisa enviar o tipo e exigir o CPF, que nunca vai para a resposta da API, conforme o dossiê. | A landing perde conversão ao exigir esses dados, em troca de não criar contas incompletas nem espalhar null, mantendo a recusa da Factory para tipo não suportado; reputação +0, prejuízo +R$ 0 mil, dívida +0; 🔥 8 · 💰 R$ 70 mil · 🧹 -1. |
+| 03h20 | ⚡D · Teste sem assert, Aula 15 | Não vivido: exigia A ou C na R2; escolhemos D. | A escolha anterior evitou esse ramo de teste sem verificação, sem provar por si só a qualidade de qualquer suíte; nenhum efeito adicional no placar. |
+| 03h45 | R6 · O teste vermelho às 03h45 | B: investigar 50.00, corrigir a TED para R$ 5,00, conferir PIX a R$ 0,00 e preservar o assertEquals do contrato, Aula 15. | Janela perdida, correções depois da abertura e suíte saudável; reputação -1, prejuízo +R$ 30 mil, dívida -1; 🔥 7 · 💰 R$ 100 mil · 🧹 -2. |
+| 05h58 | ⚡E · Taxa 5 ou 50 | Não vivido: exigia suíte doente na R6; escolhemos B e corrigimos o código. | A escolha anterior evitou esse ramo porque o contrato de R$ 5 permaneceu protegido pelo teste; nenhum efeito adicional no placar. |
+| 06h15 | R7 · Go/No-Go da Black Friday | B: abrir duas horas depois, condicionado às correções e à suíte verde, separando numeração, taxas e extrato da coordenação no TransferenciaService de 80 linhas. | Subida sólida às 10h, perdendo o início do pico; reputação +1, prejuízo +R$ 100 mil, dívida -1; 🔥 8 · 💰 R$ 200 mil · 🧹 -3. |
 
-_______________________________________________________________________________________
+O perfil final foi A Noite dos Heróis, com suíte saudável ao amanhecer.
 
 ## 2. Causa raiz de 2 incidentes (aula + mecanismo técnico)
 
-**Incidente 1:** _______________________________________________
+Os trechos a seguir são a correção proposta e o teste de regressão de cada causa raiz.
 
-Aula/mecanismo:
+### R1 · Exceção engolida pelo catch, Aula 11
 
-_______________________________________________________________________________________
+**Sintoma observado:** saldo negativo, contrariando a invariante financeira de que o saldo nunca pode ficar negativo.
 
-**Incidente 2:** _______________________________________________
+**Causa raiz:** o próprio método capturava a SaldoInsuficienteException que acabara de lançar e engolia a recusa. O tratamento local neutralizava a proteção e permitia continuar o fluxo que deveria ser interrompido antes do débito.
 
-Aula/mecanismo:
+**Por que passou despercebido:** a captura escondia a falha de quem chamava o método. Um teste que apenas executasse a transferência não distinguiria operação concluída de recusa ignorada. A inclusão do assertThrows na R1 expõe essa diferença e precisa ser acompanhada da conferência dos saldos, pois lançar uma exceção depois de alterar valores também violaria a regra.
 
-_______________________________________________________________________________________
+**Correção que fecha essa classe do bug:** validar o saldo antes de qualquer alteração e propagar a exceção de domínio, sem um catch que transforme a recusa em continuidade. A proteção abaixo cobre saldo insuficiente; concorrência e falhas de persistência exigem garantias transacionais próprias.
+
+```java
+public void transferir(Conta origem, Conta destino, BigDecimal valor) {
+    if (origem.getSaldo().compareTo(valor) < 0) {
+        throw new SaldoInsuficienteException();
+    }
+    origem.debitar(valor);
+    destino.creditar(valor);
+}
+```
+
+**Teste que impede a regressão:** exigir a exceção e verificar que nenhuma conta foi alterada na recusa.
+
+```java
+@Test
+void recusaSaldoInsuficienteSemAlterarContas() {
+    var origem = new Conta(new BigDecimal("5.00"));
+    var destino = new Conta(BigDecimal.ZERO);
+    var servico = new TransferenciaService();
+    assertThrows(SaldoInsuficienteException.class,
+        () -> servico.transferir(origem, destino, new BigDecimal("50.00")));
+    assertEquals(new BigDecimal("5.00"), origem.getSaldo());
+    assertEquals(BigDecimal.ZERO, destino.getSaldo());
+}
+```
+
+### R6 · Número mágico contra o contrato do teste, Aula 15
+
+**Sintoma observado:** o teste vermelho apontava divergência entre a taxa TED do código, 50.00, e o contrato, R$ 5,00.
+
+**Causa raiz:** o cálculo embutia um número mágico incompatível com a regra contratual. Usar @Disabled ou trocar o esperado para acompanhar o erro retiraria o alarme sem corrigir a cobrança.
+
+**Por que passou despercebido:** um cálculo pode executar sem exceção e ainda cobrar errado. A divergência só fica observável quando o resultado é confrontado com uma expectativa independente, o contrato. A investigação da R6 mostrou que o código precisava mudar; o registro não permite atribuir a falha a uma execução anterior específica da suíte.
+
+**Correção que fecha essa classe do bug:** concentrar a regra de taxa em uma calculadora, com valores monetários explícitos em BigDecimal e cobertura dos contratos TED e PIX. Separar a responsabilidade facilita conferir a regra sem percorrer toda a transferência.
+
+```java
+class CalculadoraTaxa {
+    BigDecimal calcular(TipoTransferencia tipo) {
+        return switch (tipo) {
+            case TED -> new BigDecimal("5.00");
+            case PIX -> new BigDecimal("0.00");
+        };
+    }
+}
+```
+
+**Teste que impede a regressão:** manter os esperados contratuais, sem @Disabled. O exemplo considera os tipos TED e PIX; a integração deve conferir também a taxa efetivamente usada pelo serviço e registrada no extrato.
+
+```java
+@Test
+void respeitaTaxasContratuaisDeTedEPix() {
+    var calculadora = new CalculadoraTaxa();
+    assertEquals(new BigDecimal("5.00"),
+        calculadora.calcular(TipoTransferencia.TED));
+    assertEquals(new BigDecimal("0.00"),
+        calculadora.calcular(TipoTransferencia.PIX));
+}
+```
 
 ## 3. O que faríamos diferente (2 rodadas + por quê)
 
-_______________________________________________________________________________________
+### R3 · Preparar a migração antes da janela
 
-_______________________________________________________________________________________
+A escolha D deu ao banco a responsabilidade pela numeração, mas custou cerca de 1h e R$ 10 mil em plena madrugada. Hoje anteciparíamos a auditoria de duplicatas, o ensaio da migração e a validação da unicidade entre instâncias para antes da campanha, deixando o avanço da sequence acima do maior número existente como condição de liberação. Continuaríamos com D: corrigir apenas o Singleton não resolve a numeração entre JVMs. O trade-off seria retirar tempo de outras entregas para preparar a migração; não há base para prometer eliminação do atraso ou do prejuízo. Nossa falha de condução foi chegar à janela sem essa preparação.
+
+### R4 · Separar a correção de novas gravações do histórico
+
+A escolha B restaurou a integridade dos comprovantes, mas o trabalho conjunto custou cerca de 2h e R$ 25 mil. Hoje corrigiríamos primeiro a gravação de origem e destino e validaríamos pagador e recebedor; depois conduziríamos o reprocessamento do histórico em etapa própria, com evidência confiável, idempotência e sem refazer débitos. Continuaríamos responsáveis por concluir o histórico, sem declarar integridade total antes da conciliação. O trade-off seria manter temporariamente comprovantes antigos incorretos e a possibilidade de contestação, enquanto novas gravações já estariam protegidas.
 
 ## 4. A maior lição da equipe
 
-_______________________________________________________________________________________
+Aprendemos que preservar o contrato do banco exige tornar a falha visível e verificar o estado que fica depois dela. Na R1, uma exceção sem propagação não protegia o saldo; na R6, executar sem erro não garantia a taxa correta. Aceitamos atrasos para corrigir essas violações, mas o prejuízo de R$ 200 mil mostra o custo de concentrar validação e mudanças estruturais na madrugada da campanha. A responsabilidade inclui preparar essas verificações antes da janela. **Integridade**
+
+### Apresentação relâmpago (roteiro de 2 a 3 min)
+
+- **Caminho:** R1 C, R2 D, R3 D, R4 B, R5 A, ⚡C B, R6 B e R7 B; A Noite dos Heróis, 🔥 8 · 💰 R$ 200 mil · 🧹 -3, com suíte saudável.
+- **Pior momento:** na R6, descobrir a cobrança TED de 50.00 contra o contrato de R$ 5,00 e perder a janela para corrigir o código sem silenciar o teste.
+- **Maior lição:** uma regra só está protegida quando a falha aparece e o teste verifica o resultado e o estado preservado, incluindo os saldos na recusa.
+- **O que mudaríamos:** antecipar a preparação da migração da R3 e separar, na R4, a correção de novas gravações do reprocessamento acompanhado do histórico, reconhecendo os custos e riscos.
+- **A palavra:** **Integridade**.
