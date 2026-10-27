@@ -130,6 +130,26 @@ A Factory deve criar um objeto válido ou lançar exceção clara para tipo não
 
 **Placar do grupo após esta decisão:** 🔥 8 · 💰 R$ 70 mil · 🧹 -1
 
+## Evento relâmpago C: O cadastro com metade dos campos
+
+**Tipo:** relâmpago · **Voto:** B
+
+**Justificativa:**
+
+O Builder dará valores padrão só a campos opcionais sem efeito de negócio, como saldo inicial zero. Tipo de conta e CPF continuam obrigatórios; o build() lançará exceção clara quando faltarem, coerente com o fail-fast da R5. A landing precisa enviar o tipo de conta e exigir o CPF, que nunca vai para a resposta da API, conforme o dossiê. Tipo não suportado continua sujeito à recusa da Factory. Aceitamos perder conversão na landing ao exigir esses dados, em troca de não criar contas incompletas nem espalhar null.
+
+**Placar do grupo após esta decisão:** 🔥 8 · 💰 R$ 70 mil · 🧹 -1
+
+## Rodada 6: O teste vermelho às 03h45
+
+**Tipo:** rodada · **Voto:** B
+
+**Justificativa:**
+
+Investigaremos o número mágico 50.00 e corrigiremos a taxa TED para R$ 5,00, preservando o assertEquals do contrato e verificando também PIX a R$ 0,00. @Disabled ou mudar o esperado esconderia a divergência. Rodaremos a suíte completa antes do deploy, como exige o dossiê, mesmo perdendo a janela. Aceitamos atrasar as correções e a receita; a violação de saldo da R1 continua urgente, sem justificar liberar outra cobrança incorreta.
+
+**Placar do grupo após esta decisão:** 🔥 7 · 💰 R$ 100 mil · 🧹 -2
+
 ---
 
 
