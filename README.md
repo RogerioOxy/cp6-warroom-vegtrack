@@ -80,6 +80,16 @@ segurança × faturamento × dívida). "Porque é mais seguro" não é justifica
 
 *(placar inicial do grupo: 🔥 7 · 💰 0 · 🧹 2)*
 
+## Rodada 1: O saldo que virou negativo
+
+**Tipo:** rodada · **Voto:** C
+
+**Justificativa:**
+
+O catch engole a SaldoInsuficienteException que protege a regra do dossiê: saldo nunca negativo. Remover esse tratamento permite recusar a operação com erro claro antes do débito. Escreveremos assertThrows e assertEquals para verificar a recusa e os saldos preservados. Isso consome tempo da janela, mas evita trocar proteção financeira por velocidade sem evidência contra regressão.
+
+**Placar do grupo após esta decisão:** 🔥 8 · 💰 R$ 35 mil · 🧹 1
+
 ---
 
 
