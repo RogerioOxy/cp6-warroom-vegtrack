@@ -90,6 +90,16 @@ O catch engole a SaldoInsuficienteException que protege a regra do dossiê: sald
 
 **Placar do grupo após esta decisão:** 🔥 8 · 💰 R$ 35 mil · 🧹 1
 
+## Rodada 2: A injeção que derreteu o banco
+
+**Tipo:** rodada · **Voto:** D
+
+**Justificativa:**
+
+Usaremos a derived query findByTitular do repository Spring Data JPA, substituindo o Statement com SQL concatenado por consulta com parâmetros vinculados, como exige o dossiê. O ciclo de recursos fica sob gestão do JPA, sem conexão JDBC manual abandonada. Integraremos e testaremos esse caminho antes de subir: custa validação agora, mas reduz código duplicado e exposição das contas na Black Friday.
+
+**Placar do grupo após esta decisão:** 🔥 8 · 💰 R$ 35 mil · 🧹 0
+
 ---
 
 
