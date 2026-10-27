@@ -110,6 +110,16 @@ O getInstancia cria outro objeto e reinicia o contador, quebrando o Singleton. G
 
 **Placar do grupo após esta decisão:** 🔥 8 · 💰 R$ 45 mil · 🧹 0
 
+## Rodada 4: O comprovante que aponta pra pessoa errada
+
+**Tipo:** rodada · **Voto:** B
+
+**Justificativa:**
+
+Os argumentos posicionais do construtor inverteram origem e destino. Corrigiremos a gravação e usaremos assertEquals para conferir pagador e recebedor, respeitando a ordem exigida pelo dossiê. Reprocessaremos somente registros cuja direção possa ser comprovada por evidência confiável, com rotina idempotente e sem refazer débitos. O custo de conciliação atrasa a entrega, mas deixar histórico falso transfere dívida e contestação ao cliente.
+
+**Placar do grupo após esta decisão:** 🔥 9 · 💰 R$ 70 mil · 🧹 -1
+
 ---
 
 
