@@ -100,6 +100,16 @@ Usaremos a derived query findByTitular do repository Spring Data JPA, substituin
 
 **Placar do grupo após esta decisão:** 🔥 8 · 💰 R$ 35 mil · 🧹 0
 
+## Rodada 3: A noite das contas gêmeas
+
+**Tipo:** rodada · **Voto:** D
+
+**Justificativa:**
+
+O getInstancia cria outro objeto e reinicia o contador, quebrando o Singleton. Guardar uma instância só protege uma JVM; escolheremos sequence Oracle para gerar números sequenciais entre instâncias, conforme o dossiê. A migração exige auditar duplicatas, iniciar a sequence acima do maior número existente e garantir unicidade no banco. Aceitamos esse trabalho antes da campanha para não depender de estado em memória para um identificador regulado.
+
+**Placar do grupo após esta decisão:** 🔥 8 · 💰 R$ 45 mil · 🧹 0
+
 ---
 
 
