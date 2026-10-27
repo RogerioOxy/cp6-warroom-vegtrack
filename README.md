@@ -120,6 +120,16 @@ Os argumentos posicionais do construtor inverteram origem e destino. Corrigiremo
 
 **Placar do grupo após esta decisão:** 🔥 9 · 💰 R$ 70 mil · 🧹 -1
 
+## Rodada 5: A fábrica que devolve null
+
+**Tipo:** rodada · **Voto:** A
+
+**Justificativa:**
+
+A Factory deve criar um objeto válido ou lançar exceção clara para tipo não suportado, em vez de devolver null e falhar longe da causa no save do repository. Testaremos esse contrato com assertThrows. O fail-fast não implementa a conta UNIVERSITARIA anunciada: aceitamos a recusa explícita e o impacto no faturamento até definir esse produto, preservando a causa do erro sem cadastrar outra modalidade silenciosamente.
+
+**Placar do grupo após esta decisão:** 🔥 8 · 💰 R$ 70 mil · 🧹 -1
+
 ---
 
 
