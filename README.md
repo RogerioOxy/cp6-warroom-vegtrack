@@ -150,6 +150,16 @@ Investigaremos o número mágico 50.00 e corrigiremos a taxa TED para R$ 5,00, p
 
 **Placar do grupo após esta decisão:** 🔥 7 · 💰 R$ 100 mil · 🧹 -2
 
+## Rodada 7: Go/No-Go da Black Friday
+
+**Tipo:** rodada · **Voto:** B
+
+**Justificativa:**
+
+A concentração de responsabilidades no TransferenciaService exige separar geração de número, cálculo de taxa e montagem do extrato, mantendo no serviço a coordenação da transferência e a recusa por saldo insuficiente. Escolhemos abrir duas horas depois, condicionado às correções e à suíte verde real: assertEquals e assertThrows para taxas, saldo e extrato, além de integração para a sequence. Atrasar custa faturamento, mas cumprir o dossiê reduz o risco de repetir falhas sob maior volume.
+
+**Placar do grupo após esta decisão:** 🔥 8 · 💰 R$ 200 mil · 🧹 -3
+
 ---
 
 
